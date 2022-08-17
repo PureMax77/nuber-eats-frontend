@@ -48,7 +48,7 @@ export const CreateAccount = () => {
     if (ok) {
       // redirect
       alert("Account Created! Log in now!");
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     }
   };
 
@@ -135,7 +135,7 @@ export const CreateAccount = () => {
         </form>
         <div>
           Already have an account?{" "}
-          <Link to="/login" className="text-lime-600 hover:underline">
+          <Link to="/" className="text-lime-600 hover:underline">
             Log in now
           </Link>
         </div>
