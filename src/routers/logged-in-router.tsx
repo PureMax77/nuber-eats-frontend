@@ -4,11 +4,13 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { NotFound } from "../pages/404";
 import { Restaurants } from "../pages/client/restaurants";
+import { ConfirmEmail } from "../pages/user/confirm-email";
 
 const ClientRoutes = () => (
   <>
     <Routes>
       <Route path="/" element={<Restaurants />} />
+      <Route path="/confirm" element={<ConfirmEmail />} />
     </Routes>
   </>
 );
@@ -31,7 +33,7 @@ export const LoggedInRouter = () => {
         {data.me.role === "Client" && (
           <Route path="/" element={<ClientRoutes />} />
         )}
-        <Route path="/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
