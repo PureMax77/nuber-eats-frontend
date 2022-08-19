@@ -1,19 +1,7 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
-import { NotFound } from "../pages/404";
-import { Restaurants } from "../pages/client/restaurants";
-import { ConfirmEmail } from "../pages/user/confirm-email";
-
-const ClientRoutes = () => (
-  <>
-    <Routes>
-      <Route path="/" element={<Restaurants />} />
-      <Route path="/confirm" element={<ConfirmEmail />} />
-    </Routes>
-  </>
-);
+import { ClientRoute } from "./client-route";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Header } from "../components/header";
 
 export const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
@@ -29,12 +17,7 @@ export const LoggedInRouter = () => {
   return (
     <Router>
       <Header />
-      <Routes>
-        {data.me.role === "Client" && (
-          <Route path="/" element={<ClientRoutes />} />
-        )}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {data.me.role === "Client" && <ClientRoute me={data.me} />}
     </Router>
   );
 };
