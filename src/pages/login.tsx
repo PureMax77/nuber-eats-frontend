@@ -4,6 +4,8 @@ import { FormError } from "../components/form-error";
 import { ApolloError, gql, useMutation } from "@apollo/client";
 import { LoginMutation, LoginMutationVariables } from "../__api__/types";
 import numberLogo from "../images/logo.svg";
+import { Button } from "../components/button";
+import { Link } from "react-router-dom";
 
 const LOGIN_MUTATION = gql`
   mutation login($loginInput: LoginInput!) {
@@ -26,7 +28,7 @@ export const Login = () => {
     getValues,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<ILoginForm>();
 
   const onCompleted = (data: LoginMutation) => {
@@ -69,7 +71,7 @@ export const Login = () => {
         </h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5 w-full"
+          className="grid gap-3 mt-5 w-full mb-3"
         >
           <input
             {...register("email", { required: "Email is required" })}
@@ -97,11 +99,17 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage={"Password must be more than 10 chars."} />
           )}
-          <button className="btn">{loading ? "로딩중" : "로그인"}</button>
+          <Button canClick={isValid} loading={loading} actionText={"Log in"} />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        <div>
+          New to Nuber?{" "}
+          <Link to="/create-account" className=" text-lime-600 hover:underline">
+            Create an Account
+          </Link>
+        </div>
       </div>
     </div>
   );
