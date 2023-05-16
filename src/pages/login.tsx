@@ -6,6 +6,7 @@ import { LoginMutation, LoginMutationVariables } from "../__api__/types";
 import numberLogo from "../images/logo.svg";
 import { Button } from "../components/button";
 import { Link } from "react-router-dom";
+import Helmet from "react-helmet";
 
 const LOGIN_MUTATION = gql`
   mutation login($loginInput: LoginInput!) {
@@ -64,6 +65,9 @@ export const Login = () => {
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <Helmet>
+        <title>Login | Nuber eats</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={numberLogo} className="w-50 mb-10" />
         <h4 className="w-full font-medium text-left text-3xl mb-5">
@@ -106,7 +110,10 @@ export const Login = () => {
         </form>
         <div>
           New to Nuber?{" "}
-          <Link to="/create-account" className=" text-lime-600 hover:underline">
+          <Link
+            to={"/create-account"}
+            className=" text-lime-600 hover:underline"
+          >
             Create an Account
           </Link>
         </div>
