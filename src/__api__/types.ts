@@ -569,6 +569,11 @@ export type VerifyEmailOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: number, email: string, role: UserRole, verified: boolean } };
+
 export type CreateAccountMutationVariables = Exact<{
   createAccountInput: CreateAccountInput;
 }>;
