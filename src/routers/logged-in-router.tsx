@@ -5,19 +5,23 @@ import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import NotFoundPage from "../pages/404";
 import { ConfirmEmail } from "../pages/user/confirm-email";
+import { EditProfile } from "../pages/user/edit-profile";
 
 const ClientRouter = [
-  <Route path="/" exact>
+  <Route key={1} path="/" exact>
     <Restaurants />
   </Route>,
-  <Route path="/confirm" exact>
+  <Route key={2} path="/confirm" exact>
     <ConfirmEmail />
+  </Route>,
+  <Route key={3} path="/edit-profile" exact>
+    <EditProfile />
   </Route>,
 ];
 
 export const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
-  console.log(loading, error, data);
+
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
