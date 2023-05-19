@@ -1,17 +1,17 @@
 import { UserRole } from "../__api__/types";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Restaurants } from "../pages/client/restaurants";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
+import NotFoundPage from "../pages/404";
+import { ConfirmEmail } from "../pages/user/confirm-email";
 
 const ClientRouter = [
   <Route path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route path="/confirm" exact>
+    <ConfirmEmail />
   </Route>,
 ];
 
@@ -31,7 +31,9 @@ export const LoggedInRouter = () => {
       <Header />
       <Switch>
         {data.me.role === UserRole.Client && ClientRouter}
-        <Redirect to="/" />
+        <Route>
+          <NotFoundPage />
+        </Route>
       </Switch>
     </Router>
   );
