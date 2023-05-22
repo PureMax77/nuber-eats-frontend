@@ -37,7 +37,7 @@ const RESTAURANTS_QUERY = gql`
 `;
 
 export const Restaurants = () => {
-  const { data, loading, error } = useQuery<
+  const { data, loading } = useQuery<
     RestaurantsPageQuery,
     RestaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
@@ -48,5 +48,34 @@ export const Restaurants = () => {
     },
   });
   console.log(data);
-  return <div>레스톨아</div>;
+  return (
+    <div>
+      <form className="bg-gray-800 w-full py-40 flex justify-center items-center">
+        <input
+          className="input rounded-md border-0 w-3/12"
+          type="search"
+          placeholder="음식점 검색..."
+        />
+      </form>
+      {!loading && (
+        <div className="max-w-screen-2xl mx-auto mt-8">
+          <div className="flex justify-around max-w-sm mx-auto">
+            {data?.allCategories.categories?.map((category, index) => (
+              <div className="flex flex-col items-center">
+                <div
+                  key={index}
+                  className="w-14 h-14 bg-cover hover:bg-gray-200 rounded-full cursor-pointer"
+                  style={{ backgroundImage: `url(${category.coverImg})` }}
+                ></div>
+                <span className="mt-1 text-sm text-center font-medium">
+                  {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <div></div>
+    </div>
+  );
 };
