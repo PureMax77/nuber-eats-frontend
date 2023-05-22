@@ -1,12 +1,15 @@
 import { gql, useQuery } from "@apollo/client";
+
+import { Restaurant } from "../../components/restaurant";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useHistory } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   RestaurantsPageQuery,
   RestaurantsPageQueryVariables,
 } from "../../__api__/types";
-import { Restaurant } from "../../components/restaurant";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPage($input: RestaurantsInput!) {
@@ -14,11 +17,7 @@ const RESTAURANTS_QUERY = gql`
       ok
       error
       categories {
-        id
-        name
-        coverImg
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
     restaurants(input: $input) {
@@ -27,17 +26,12 @@ const RESTAURANTS_QUERY = gql`
       totalPages
       totalResults
       results {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
 
 interface IFormProps {
@@ -72,6 +66,9 @@ export const Restaurants = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Home | Nuber Eats</title>
+      </Helmet>
       <form
         onSubmit={handleSubmit(onSearchSubmit)}
         className="bg-gray-800 w-full py-40 flex justify-center items-center"
@@ -87,15 +84,17 @@ export const Restaurants = () => {
         <div className="max-w-screen-2xl pb-20 mx-auto mt-8">
           <div className="flex justify-around max-w-sm mx-auto">
             {data?.allCategories.categories?.map((category, index) => (
-              <div key={index} className="flex flex-col group items-center">
-                <div
-                  className="w-14 h-14 bg-cover group-hover:bg-gray-200 rounded-full cursor-pointer"
-                  style={{ backgroundImage: `url(${category.coverImg})` }}
-                ></div>
-                <span className="mt-1 text-sm text-center font-medium">
-                  {category.name}
-                </span>
-              </div>
+              <Link key={index} to={`/category/${category.slug}`}>
+                <div className="flex flex-col group items-center">
+                  <div
+                    className="w-14 h-14 bg-cover group-hover:bg-gray-200 rounded-full cursor-pointer"
+                    style={{ backgroundImage: `url(${category.coverImg})` }}
+                  ></div>
+                  <span className="mt-1 text-sm text-center font-medium">
+                    {category.name}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
           <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">

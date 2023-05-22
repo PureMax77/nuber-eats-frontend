@@ -1,12 +1,12 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import {
-  VerifyEmailMutation,
-  VerifyEmailMutationVariables,
-} from "../../__api__/types";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useMe } from "../../hooks/useMe";
 import { Helmet } from "react-helmet";
+import {
+  VerifyEmailMutation,
+  VerifyEmailMutationVariables,
+} from "../../__api__/types";
 
 const VERIFY_EMAIL_MUTATION = gql`
   mutation verifyEmail($input: VerifyEmailInput!) {
@@ -45,8 +45,6 @@ export const ConfirmEmail = () => {
     VerifyEmailMutation,
     VerifyEmailMutationVariables
   >(VERIFY_EMAIL_MUTATION, { onCompleted });
-
-  const location = useLocation();
 
   useEffect(() => {
     const [, code] = window.location.href.split("code=");
