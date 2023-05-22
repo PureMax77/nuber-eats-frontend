@@ -1,9 +1,13 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 const NotFoundPage = () => {
   return (
     <div className="flex items-center justify-center h-screen">
+      <Helmet>
+        <title>Not Found | Nuber Eats</title>
+      </Helmet>
       <div className="text-center">
         <h1 className="text-6xl text-gray-700 font-semibold">404</h1>
         <p className="text-gray-500 text-xl mt-4">
