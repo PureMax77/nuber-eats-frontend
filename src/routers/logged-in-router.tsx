@@ -6,6 +6,7 @@ import { useMe } from "../hooks/useMe";
 import NotFoundPage from "../pages/404";
 import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
+import { Search } from "../pages/client/search";
 
 const ClientRouter = [
   <Route key={1} path="/" exact>
@@ -16,6 +17,9 @@ const ClientRouter = [
   </Route>,
   <Route key={3} path="/edit-profile" exact>
     <EditProfile />
+  </Route>,
+  <Route key={4} path="/search" exact>
+    <Search />
   </Route>,
 ];
 

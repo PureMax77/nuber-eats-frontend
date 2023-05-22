@@ -3,6 +3,10 @@ import {
   RestaurantsPageQuery,
   RestaurantsPageQueryVariables,
 } from "../../__api__/types";
+import { Restaurant } from "../../components/restaurant";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 const RESTAURANTS_QUERY = gql`
   query restaurantsPage($input: RestaurantsInput!) {
@@ -36,35 +40,56 @@ const RESTAURANTS_QUERY = gql`
   }
 `;
 
+interface IFormProps {
+  searchTerm: string;
+}
+
 export const Restaurants = () => {
+  const [page, setPage] = useState(1);
+
   const { data, loading } = useQuery<
     RestaurantsPageQuery,
     RestaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
     variables: {
       input: {
-        page: 1,
+        page,
       },
     },
   });
-  console.log(data);
+
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
+  const { register, handleSubmit, getValues } = useForm<IFormProps>();
+  const history = useHistory();
+  const onSearchSubmit = () => {
+    const { searchTerm } = getValues();
+    history.push({
+      pathname: "/search",
+      search: `term=${searchTerm}`,
+    });
+  };
+
   return (
     <div>
-      <form className="bg-gray-800 w-full py-40 flex justify-center items-center">
+      <form
+        onSubmit={handleSubmit(onSearchSubmit)}
+        className="bg-gray-800 w-full py-40 flex justify-center items-center"
+      >
         <input
-          className="input rounded-md border-0 w-3/12"
+          {...register("searchTerm", { required: true, min: 3 })}
+          className="input rounded-md border-0 w-3/4 md:w-3/12"
           type="search"
           placeholder="음식점 검색..."
         />
       </form>
       {!loading && (
-        <div className="max-w-screen-2xl mx-auto mt-8">
+        <div className="max-w-screen-2xl pb-20 mx-auto mt-8">
           <div className="flex justify-around max-w-sm mx-auto">
             {data?.allCategories.categories?.map((category, index) => (
-              <div className="flex flex-col items-center">
+              <div key={index} className="flex flex-col group items-center">
                 <div
-                  key={index}
-                  className="w-14 h-14 bg-cover hover:bg-gray-200 rounded-full cursor-pointer"
+                  className="w-14 h-14 bg-cover group-hover:bg-gray-200 rounded-full cursor-pointer"
                   style={{ backgroundImage: `url(${category.coverImg})` }}
                 ></div>
                 <span className="mt-1 text-sm text-center font-medium">
@@ -72,6 +97,42 @@ export const Restaurants = () => {
                 </span>
               </div>
             ))}
+          </div>
+          <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+            {data?.restaurants.results?.map((restaurant, index) => (
+              <Restaurant
+                key={index}
+                id={restaurant.id + ""}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
+            ))}
+          </div>
+          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
+            {page > 1 ? (
+              <button
+                onClick={onPrevPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <span>
+              Page {page} of {data?.restaurants.totalPages}
+            </span>
+            {page !== data?.restaurants.totalPages ? (
+              <button
+                onClick={onNextPageClick}
+                className="focus:outline-none font-medium text-2xl"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
