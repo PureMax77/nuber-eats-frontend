@@ -10,6 +10,7 @@ import { Search } from "../pages/client/search";
 import { Category } from "../pages/client/category";
 import { Restaurant } from "../pages/client/restaurant";
 import { MyRestaurants } from "../pages/owner/my-restaurants";
+import { AddRestaurant } from "../pages/owner/add-restaurants";
 
 const clientRoutes = [
   {
@@ -46,6 +47,10 @@ const ownerRoutes = [
     path: "/",
     component: <MyRestaurants />,
   },
+  {
+    path: "/add-restaurant",
+    component: <AddRestaurant />,
+  },
 ];
 
 export const LoggedInRouter = () => {
@@ -65,13 +70,13 @@ export const LoggedInRouter = () => {
       <Switch>
         {data.me.role === UserRole.Client &&
           clientRoutes.map((route) => (
-            <Route key={route.path} path={route.path}>
+            <Route exact key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
         {data.me.role === UserRole.Owner &&
           ownerRoutes.map((route) => (
-            <Route key={route.path} path={route.path}>
+            <Route exact key={route.path} path={route.path}>
               {route.component}
             </Route>
           ))}
