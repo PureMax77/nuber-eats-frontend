@@ -350,8 +350,19 @@ export type MutationVerifyEmailArgs = {
   input: VerifyEmailInput;
 };
 
+export type MyRestaurantInput = {
+  id: Scalars['Float'];
+};
+
 export type MyRestaurantOutput = {
   __typename?: 'MyRestaurantOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  restaurant?: Maybe<Restaurant>;
+};
+
+export type MyRestaurantsOutput = {
+  __typename?: 'MyRestaurantsOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   restaurants: Array<Restaurant>;
@@ -422,7 +433,8 @@ export type Query = {
   getPayments: GetPaymentOutput;
   hi: Scalars['Boolean'];
   me: User;
-  myRestaurants: MyRestaurantOutput;
+  myRestaurant: MyRestaurantOutput;
+  myRestaurants: MyRestaurantsOutput;
   restaurant: RestaurantOutput;
   restaurants: RestaurantsOutput;
   searchRestaurant: SearchRestaurantOutput;
@@ -442,6 +454,11 @@ export type QueryGetOrderArgs = {
 
 export type QueryGetOrdersArgs = {
   input: GetOrdersInput;
+};
+
+
+export type QueryMyRestaurantArgs = {
+  input: MyRestaurantInput;
 };
 
 
@@ -636,10 +653,17 @@ export type CreateRestaurantMutationVariables = Exact<{
 
 export type CreateRestaurantMutation = { __typename?: 'Mutation', createRestaurant: { __typename?: 'CreateRestaurantOutput', error?: string | null, ok: boolean, restaurantId: number } };
 
+export type MyRestaurantQueryVariables = Exact<{
+  input: MyRestaurantInput;
+}>;
+
+
+export type MyRestaurantQuery = { __typename?: 'Query', myRestaurant: { __typename?: 'MyRestaurantOutput', ok: boolean, error?: string | null, restaurant?: { __typename?: 'Restaurant', id: number, name: string, coverImg: string, address: string, isPromoted: boolean, category?: { __typename?: 'Category', name: string } | null } | null } };
+
 export type MyRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyRestaurantsQuery = { __typename?: 'Query', myRestaurants: { __typename?: 'MyRestaurantOutput', ok: boolean, error?: string | null, restaurants: Array<{ __typename?: 'Restaurant', id: number, name: string, coverImg: string, address: string, isPromoted: boolean, category?: { __typename?: 'Category', name: string } | null }> } };
+export type MyRestaurantsQuery = { __typename?: 'Query', myRestaurants: { __typename?: 'MyRestaurantsOutput', ok: boolean, error?: string | null, restaurants: Array<{ __typename?: 'Restaurant', id: number, name: string, coverImg: string, address: string, isPromoted: boolean, category?: { __typename?: 'Category', name: string } | null }> } };
 
 export type VerifyEmailMutationVariables = Exact<{
   input: VerifyEmailInput;
