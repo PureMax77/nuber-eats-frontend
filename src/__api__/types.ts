@@ -111,6 +111,7 @@ export type CreateRestaurantOutput = {
   __typename?: 'CreateRestaurantOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  restaurantId: Scalars['Float'];
 };
 
 export type DeleteDishInput = {
@@ -633,7 +634,7 @@ export type CreateRestaurantMutationVariables = Exact<{
 }>;
 
 
-export type CreateRestaurantMutation = { __typename?: 'Mutation', createRestaurant: { __typename?: 'CreateRestaurantOutput', error?: string | null, ok: boolean } };
+export type CreateRestaurantMutation = { __typename?: 'Mutation', createRestaurant: { __typename?: 'CreateRestaurantOutput', error?: string | null, ok: boolean, restaurantId: number } };
 
 export type MyRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 

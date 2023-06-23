@@ -4,11 +4,11 @@ import {
   MyRestaurantsQuery,
   MyRestaurantsQueryVariables,
 } from "../../__api__/types";
-import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { Restaurant } from "../../components/restaurant";
 
-const MY_RESTAURANTS_QUERY = gql`
+export const MY_RESTAURANTS_QUERY = gql`
   query myRestaurants {
     myRestaurants {
       ok
@@ -35,17 +35,29 @@ export const MyRestaurants = () => {
       <div className="max-w-screen-2xl mx-auto mt-32">
         <h2 className="text-4xl font-medium mb-10">My Restaurants</h2>
         {data?.myRestaurants.ok &&
-          data.myRestaurants.restaurants.length === 0 && (
-            <>
-              <h4 className="text-xl mb-5">You have no restaurants.</h4>
-              <Link
-                className="text-lime-600 hover:underline"
-                to="/add-restaurant"
-              >
-                Create one &rarr;
-              </Link>
-            </>
-          )}
+        data.myRestaurants.restaurants.length === 0 ? (
+          <>
+            <h4 className="text-xl mb-5">You have no restaurants.</h4>
+            <Link
+              className="text-lime-600 hover:underline"
+              to="/add-restaurant"
+            >
+              Create one &rarr;
+            </Link>
+          </>
+        ) : (
+          <div className="grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+            {data?.myRestaurants.restaurants?.map((restaurant, index) => (
+              <Restaurant
+                key={index}
+                id={restaurant.id + ""}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
