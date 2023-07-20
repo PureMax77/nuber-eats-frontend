@@ -1,22 +1,48 @@
 import { DishOption } from "../__api__/types";
 
 interface IDishProps {
+  id?: number;
   description: string;
   name: string;
   price: number;
   isCustomer?: boolean;
+  orderStarted?: boolean;
   options?: DishOption[];
+  addItemToOrder?: (dishId: number) => void;
+  removeFromOrder?: (dishId: number) => void;
+  isSelected?: boolean;
 }
 
 export const Dish: React.FC<IDishProps> = ({
+  id = 0,
   description,
   name,
   price,
   isCustomer = false,
+  orderStarted = false,
   options,
+  addItemToOrder,
+  removeFromOrder,
+  isSelected,
 }) => {
+  const onClick = () => {
+    if (orderStarted) {
+      if (!isSelected && addItemToOrder) {
+        return addItemToOrder(id);
+      }
+      if (isSelected && removeFromOrder) {
+        return removeFromOrder(id);
+      }
+    }
+  };
+
   return (
-    <div className=" px-8 py-4 border hover:border-gray-800 transition-all">
+    <div
+      onClick={onClick}
+      className={`px-8 py-4 border cursor-pointer transition-all ${
+        isSelected ? "border-gray-800" : "hover:border-gray-800"
+      }`}
+    >
       <div className="mb-5">
         <h3 className="text-lg font-medium mb-5">{name}</h3>
         <h4 className="font-medium">{description}</h4>

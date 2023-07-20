@@ -1,8 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
-import { RestaurantQuery, RestaurantQueryVariables } from "../../__api__/types";
+import {
+  CreateOrderItemInput,
+  RestaurantQuery,
+  RestaurantQueryVariables,
+} from "../../__api__/types";
 import { Dish } from "../../components/dish";
+import { useState } from "react";
 
 const RESTAURANT_QUERY = gql`
   query restaurant($input: RestaurantInput!) {
@@ -19,6 +24,15 @@ const RESTAURANT_QUERY = gql`
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+`;
+
+const CREATE_ORDER_MUTATION = gql`
+  mutation createOrder($input: CreateOrderInput!) {
+    createOrder(input: $input) {
+      ok
+      error
+    }
+  }
 `;
 
 interface IRestaurantParams {
@@ -38,6 +52,28 @@ export const Restaurant = () => {
     }
   );
 
+  const [orderStarted, setOrderStarted] = useState<boolean>(false);
+  const [orderItems, setOrderItems] = useState<CreateOrderItemInput[]>([]);
+  const triggerStartOrder = () => {
+    setOrderStarted(true);
+  };
+
+  const isSelected = (dishId: number) => {
+    return Boolean(orderItems.find((order) => order.dishId === dishId));
+  };
+
+  const addItemToOrder = (dishId: number) => {
+    if (isSelected(dishId)) {
+      return;
+    }
+    setOrderItems((current) => [{ dishId }, ...current]);
+  };
+  const removeFromOrder = (dishId: number) => {
+    setOrderItems((current) =>
+      current.filter((dish) => dish.dishId !== dishId)
+    );
+  };
+
   return (
     <div>
       <div
@@ -56,17 +92,27 @@ export const Restaurant = () => {
           </h6>
         </div>
       </div>
-      <div className="container grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
-        {data?.restaurant.restaurant?.menu.map((dish, index) => (
-          <Dish
-            key={index}
-            name={dish.name}
-            description={dish.description}
-            price={dish.price}
-            isCustomer={true}
-            options={dish.options || []}
-          />
-        ))}
+      <div className="container pb-32 flex flex-col items-end mt-20">
+        <button onClick={triggerStartOrder} className="btn px-10">
+          {orderStarted ? "Ordering" : "Start Order"}
+        </button>
+        <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
+          {data?.restaurant.restaurant?.menu.map((dish, index) => (
+            <Dish
+              isSelected={isSelected(dish.id)}
+              key={index}
+              id={dish.id}
+              name={dish.name}
+              description={dish.description}
+              price={dish.price}
+              isCustomer={true}
+              orderStarted={orderStarted}
+              options={dish.options || []}
+              addItemToOrder={addItemToOrder}
+              removeFromOrder={removeFromOrder}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
