@@ -1,8 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { useHistory, useParams } from "react-router-dom";
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   CreateOrderItemInput,
+  CreateOrderMutation,
+  CreateOrderMutationVariables,
   RestaurantQuery,
   RestaurantQueryVariables,
 } from "../../__api__/types";
@@ -31,6 +33,7 @@ const CREATE_ORDER_MUTATION = gql`
   mutation createOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
       ok
+      orderId
       error
     }
   }
@@ -129,6 +132,41 @@ export const Restaurant = () => {
     }
     return false;
   };
+  const triggerCancelOrder = () => {
+    setOrderStarted(false);
+    setOrderItems([]);
+  };
+  const history = useHistory();
+  const onCompleted = (data: CreateOrderMutation) => {
+    const {
+      createOrder: { ok, orderId },
+    } = data;
+    if (ok) {
+      history.push(`/orders/${orderId}`);
+      // alert("주문이 완료됐습니다.");
+    }
+  };
+  const [createOrderMutation, { loading: placingOrder }] = useMutation<
+    CreateOrderMutation,
+    CreateOrderMutationVariables
+  >(CREATE_ORDER_MUTATION, { onCompleted });
+  const triggerConfirmOrder = () => {
+    if (orderItems.length === 0) {
+      alert("주문 내용이 없습니다.");
+      return;
+    }
+    const ok = window.confirm("해당 내용으로 주문하시겠습니까?");
+    if (ok) {
+      createOrderMutation({
+        variables: {
+          input: {
+            restaurantId: +params.id,
+            items: orderItems,
+          },
+        },
+      });
+    }
+  };
 
   return (
     <div>
@@ -149,9 +187,25 @@ export const Restaurant = () => {
         </div>
       </div>
       <div className="container pb-32 flex flex-col items-end mt-20">
-        <button onClick={triggerStartOrder} className="btn px-10">
-          {orderStarted ? "Ordering" : "Start Order"}
-        </button>
+        {!orderStarted && (
+          <button onClick={triggerStartOrder} className="btn px-10">
+            Start Order
+          </button>
+        )}
+        {orderStarted && (
+          <div className="flex items-center">
+            <button onClick={triggerConfirmOrder} className="btn px-10 mr-3">
+              Confirm Order
+            </button>
+            <button
+              onClick={triggerCancelOrder}
+              className="btn px-10 bg-black hover:bg-black"
+            >
+              Cancel Order
+            </button>
+          </div>
+        )}
+
         <div className="w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10">
           {data?.restaurant.restaurant?.menu.map((dish, index) => (
             <Dish
