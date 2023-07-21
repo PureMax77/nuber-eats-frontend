@@ -151,6 +151,7 @@ export const Restaurant = () => {
     CreateOrderMutationVariables
   >(CREATE_ORDER_MUTATION, { onCompleted });
   const triggerConfirmOrder = () => {
+    if (placingOrder) return;
     if (orderItems.length === 0) {
       alert("주문 내용이 없습니다.");
       return;
