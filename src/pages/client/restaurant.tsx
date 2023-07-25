@@ -88,7 +88,7 @@ export const Restaurant = () => {
     const oldItem = getItem(dishId);
     if (oldItem) {
       const hasOption = Boolean(
-        oldItem.options?.find((aOption) => aOption.name == optionName)
+        oldItem.options?.find((aOption) => aOption.name === optionName)
       );
       if (!hasOption) {
         removeFromOrder(dishId);
@@ -123,7 +123,7 @@ export const Restaurant = () => {
     item: CreateOrderItemInput,
     optionName: string
   ) => {
-    return item.options?.find((option) => option.name == optionName);
+    return item.options?.find((option) => option.name === optionName);
   };
   const isOptionSelected = (dishId: number, optionName: string) => {
     const item = getItem(dishId);
